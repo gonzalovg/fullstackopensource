@@ -1,16 +1,36 @@
-import logo from "./logo.svg";
-import "./App.css";
-
+import React from "react";
+import Content from "./Content";
+import Header from "./Header";
+import Total from "./Total";
 const App = () => {
-  const now = new Date();
-  const a = 10;
-  const b = 20;
+  const course = {
+    name:"Half Stack application development",
+    parts :[
+      {
+        name: "Fundamentals of React",
+        exercises: 10,
+      },
+      {
+        name: "Using props to pass data",
+        exercises: 7,
+      },
+      {
+        name: "State of a component",
+        exercises: 14,
+      },
+    ]
+  }
+  
 
 
-  console.log("Hello from component!");
+
   return (
     <div>
-      <p>Hello World, it is {now.toString()}</p>
+      <Header course={course.name}></Header>
+      <Content parts={course.parts}></Content>
+      <Total
+       parts={course.parts}
+      ></Total>
     </div>
   );
 };

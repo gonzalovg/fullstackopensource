@@ -1,37 +1,23 @@
-import React from "react";
-import Content from "./Content";
-import Header from "./Header";
-import Total from "./Total";
-const App = () => {
-  const course = {
-    name:"Half Stack application development",
-    parts :[
-      {
-        name: "Fundamentals of React",
-        exercises: 10,
-      },
-      {
-        name: "Using props to pass data",
-        exercises: 7,
-      },
-      {
-        name: "State of a component",
-        exercises: 14,
-      },
-    ]
-  }
-  
+import React, { useState } from "react";
+import Button from "./Button";
+import Display from "./Display";
 
+const App = (props) => {
+  const [counter, setCounter] = useState(0);
 
+  // setTimeout(() => setCounter(counter + 1), 1000);
+
+  const increaseByOne = () => setCounter(counter + 1);
+  const decreaseByOne = () => setCounter(counter - 1);
+  const setToZero = () => setCounter(0);
 
   return (
-    <div>
-      <Header course={course.name}></Header>
-      <Content parts={course.parts}></Content>
-      <Total
-       parts={course.parts}
-      ></Total>
-    </div>
+    <>
+      <Display counter={counter}></Display>
+      <Button text="-" onClick={decreaseByOne}></Button>
+      <Button text="reset" onClick={setToZero}></Button>
+      <Button text="+" onClick={increaseByOne}></Button>
+    </>
   );
 };
 

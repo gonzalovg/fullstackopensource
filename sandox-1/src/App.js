@@ -1,6 +1,6 @@
 import Note from "./Note";
 
-const App = ({ notes }) => {
+export default function App({notes}){
   return (
     <div>
       <h1>Notes</h1>
@@ -13,4 +13,4 @@ const App = ({ notes }) => {
   );
 };
 
-export default App;
+

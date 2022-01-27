@@ -1,10 +1,9 @@
 import React from "react";
 
-export default function Total({ content }) {
-  return (
-    <p>
-      Number of exercisess{" "}
-      {content[0].exercises + content[1].exercises + content[2].exercises}
-    </p>
-  );
+export default function Total({ parts }) {
+  const total = parts.reduce((sum, el) => {
+    return sum + el.exercises;
+  }, 0);
+
+  return <b>Number of exercises {total}</b>;
 }

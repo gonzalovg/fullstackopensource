@@ -1,24 +1,15 @@
-import react, { useState } from "react";
+import React, { useState } from "react";
+import Filter from "./components/Filter";
+import Person from "./components/Person";
+import PersonForm from "./components/PersonForm";
 
 function App() {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "123456789" },
-  ]);
+  const personsSample = [{ name: "Carlos", number: 1234456 }];
+
+  const [persons, setPersons] = useState(personsSample);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [searchBar, setSearchBar] = useState("");
-
-  const [filteredPersons, setFilteredPersons] = useState("");
-
-  const handleFilteredPersons = () => {
-    const alikePersons = persons.filter(
-      (person) => person.name.toLowerCase() === searchBar
-    );
-  };
-
-  const handleSearchBar = (event) => {
-    setSearchBar(event.target.value);
-  };
+  const [filter, setFilter] = useState("");
 
   const handleNewName = (event) => {
     setNewName(event.target.value);
@@ -27,47 +18,55 @@ function App() {
     setNewNumber(event.target.value);
   };
 
+  const handleFilterChange = (event) => {
+    console.log("filter", filter);
+    setFilter(event.target.value);
+  };
+
+  const existingPerson = persons.find(
+    (person) => person.name.toLowerCase() === newName.toLowerCase()
+  );
+
   const addNewPerson = (event) => {
     event.preventDefault();
     const newPerson = {
       name: newName,
       number: newNumber,
     };
-    console.log("persons", persons);
 
-    const personAlreadyExists = persons.filter((person) =>
-      person.name === newPerson.name ? true : false
-    );
+    if (existingPerson) {
+      setNewNumber("");
+      setNewName("");
+    }
 
-    personAlreadyExists.length < 1
-      ? setPersons([...persons.concat(newPerson)])
-      : alert("person already exists");
+    setPersons([...persons.concat(newPerson)]);
+
+    setNewNumber("");
     setNewName("");
-
-    console.log("personAlreadyExists", personAlreadyExists);
   };
 
   return (
     <div>
       <h2>PHONEBOOK</h2>
-      <div>
-        search : <input onChange={handleFilteredPersons} />
-      </div>
-      <form onSubmit={addNewPerson}>
-        <div>
-          name <input onChange={handleNewName} value={newName} />
-          number <input onChange={handleNewNumber} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        onSubmit={addNewPerson}
+        newNameHandler={handleNewName}
+        newNumberHandler={handleNewNumber}
+        newName={newName}
+        newNumber={newNumber}
+      ></PersonForm>
       <h2>Persons</h2>
-      {persons.map((person) => (
-        <p key={Math.random() * 5000000}>
-          {person.name} - {person.number}
-        </p>
-      ))}
+      {/* {persons.map((person) => (
+        <Person key={Math.random() * 5000000} person={person} />
+      ))} */}
+      <Filter filter={filter} onFilterChange={handleFilterChange}></Filter>
+      {persons
+        .filter((person) => {
+          return person.name.toLowerCase().includes(filter.toLowerCase());
+        })
+        .map((filteredPerson) => {
+          return <Person person={filteredPerson} />;
+        })}
     </div>
   );
 }

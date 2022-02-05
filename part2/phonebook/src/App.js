@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import Person from "./components/Person";
 import PersonForm from "./components/PersonForm";
+import axios from "axios";
 
 function App() {
-  const personsSample = [{ name: "Carlos", number: 1234456 }];
+  // const personsSample = [{ name: "Carlos", number: 1234456 }];
 
-  const [persons, setPersons] = useState(personsSample);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+
+  const getPersons = () => {
+    axios.get("http://localhost:3001/persons").then((res) => {
+      setPersons(res.data);
+    });
+  };
+  useEffect(getPersons, []);
 
   const handleNewName = (event) => {
     setNewName(event.target.value);
@@ -19,7 +27,6 @@ function App() {
   };
 
   const handleFilterChange = (event) => {
-    console.log("filter", filter);
     setFilter(event.target.value);
   };
 
@@ -65,7 +72,7 @@ function App() {
           return person.name.toLowerCase().includes(filter.toLowerCase());
         })
         .map((filteredPerson) => {
-          return <Person person={filteredPerson} />;
+          return <Person key={filteredPerson.id} person={filteredPerson} />;
         })}
     </div>
   );

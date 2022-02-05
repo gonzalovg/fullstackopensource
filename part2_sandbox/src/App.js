@@ -1,10 +1,30 @@
 import Note from "./components/Note";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function App(props) {
-  const [notes, setNotes] = useState(props.notes);
-  const [newNote, setNewNote] = useState("a new note...");
+  const [notes, setNotes] = useState([]);
+  const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
+
+  useEffect(() => {
+    console.log("effect");
+    axios.get("http://localhost:3001/notes").then((response) => {
+      console.log("promise fulfilled");
+      setNotes(response.data);
+    });
+  }, []);
+  console.log("render", notes.length, "notes");
+
+  const hook = () => {
+    console.log("effect");
+    axios.get("http://localhost:3001/notes").then((response) => {
+      console.log("promise fulfilled");
+      setNotes(response.data);
+    });
+  };
+
+  useEffect(hook, []);
 
   const addNote = (event) => {
     event.preventDefault();
@@ -19,8 +39,6 @@ export default function App(props) {
     setNotes([...notes.concat(noteObject)]);
     setNewNote("");
   };
-
-  
 
   const handleNoteChange = (event) => {
     console.log("event.target.value", event.target.value);

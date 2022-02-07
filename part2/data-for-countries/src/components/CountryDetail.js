@@ -1,18 +1,17 @@
 import React from "react";
 
-export default function CountryDetail(props) {
-  console.log("props", props);
+export default function CountryDetail({ country }) {
   return (
-    <div id={props.countryName}>
-      <h1>{props.countryName}</h1>
+    <div id={country.name.common}>
+      <h1>{country.name.common}</h1>
       <div>
-        <h2>{props.countryName} Data</h2>
-        <p>Population: {props.countryPopulation}</p>
-        <p>Capital: {props.countryCapital}</p>
+        <h2>{country.name.common} Data</h2>
+        <p>Population: {country.population}</p>
+        <p>Capital: {country.capital}</p>
 
         <div>
           <h2>Flag</h2>
-          <img alt={props.countryName} src={props.countrySRC}></img>
+          <img alt={country.name.common} src={country.flags.svg}></img>
         </div>
       </div>
     </div>

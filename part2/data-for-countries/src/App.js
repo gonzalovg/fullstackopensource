@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Country from "./components/Country";
 import SearchInput from "./components/SearchInput";
+import CountryDetail from "./components/CountryDetail";
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState("");
-  // const [uniqueMatch, setUniqueMatch] = useState(false);
 
   useEffect(() => {
     axios
@@ -21,46 +21,35 @@ function App() {
     setFilter(event.target.value);
   };
 
-  const getFilteredCountries = () => {
-    return countries
-      .filter((country) => {
-        return country.name.common.toLowerCase().includes(filter.toLowerCase());
-      })
-      .map((filteredCountry) => (
-        <div key={filteredCountry.name.common}>
-          <Country country={filteredCountry} uniqueMatch={false}></Country>
-          <button onClick={() => setFilter(filteredCountry.name.common)}>
-            show more
-          </button>
-        </div>
-      ));
-  };
+  const countriesToShow =
+    filter === ""
+      ? []
+      : countries.filter((country) =>
+          country.name.common.toLowerCase().includes(filter.toLowerCase())
+        );
 
-  const handleFilteredCountries = () => {
-    if (getFilteredCountries().length >= 10) {
-      return <p>To many mathches</p>;
-    } else if (getFilteredCountries().length === 1) {
-      const country = countries.find((el) =>
-        el.name.common.toLowerCase().includes(filter.toLowerCase())
-      );
-
-      return (
+  if (countriesToShow.length === 1) {
+    return (
+      <div>
+        Find countries <input onChange={handleFilter} />
         <div>
-          <Country uniqueMatch={true} country={country}></Country>
+          <CountryDetail country={countriesToShow[0]} />
         </div>
-      );
-    } else {
-      // setUniqueMatch(false);
-      return getFilteredCountries();
-    }
-  };
-
-  return (
-    <div className="App">
-      <div id="search">
-        <SearchInput filterValue={filter} onChange={handleFilter}></SearchInput>
       </div>
-      <div id="countries">{handleFilteredCountries()}</div>
+    );
+  }
+  return (
+    <div>
+      Find countries <input onChange={handleFilter} />
+      <div>
+        {countriesToShow.length > 10
+          ? "Too many matches, specify another filter"
+          : countriesToShow.map((country) => (
+              <div key={country.name.common}>
+                <Country country={country} />
+              </div>
+            ))}
+      </div>
     </div>
   );
 }

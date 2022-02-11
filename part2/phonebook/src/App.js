@@ -3,6 +3,18 @@ import Filter from "./components/Filter";
 import Person from "./components/Person";
 import PersonForm from "./components/PersonForm";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
+import "./index.css";
+
+const defaultStyle = {
+    backgroundColor: "grey",
+};
+const correctStyle = {
+    backgroundColor: "green",
+};
+const errorStyle = {
+    backgroundColor: "red",
+};
 
 function App() {
     // const personsSample = [{ name: "Carlos", number: 1234456 }];
@@ -11,6 +23,8 @@ function App() {
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
     const [filter, setFilter] = useState("");
+    const [notificationMsg, setNotificationMsg] = useState("");
+    const [notificationStyle, setNotificationStyle] = useState(defaultStyle);
 
     const getPersons = () => {
         personService.getAll().then((persons) => {
@@ -55,17 +69,23 @@ function App() {
             setNewName("");
         }
 
-        personService.add(newPerson).then((person) => {
-            setPersons(persons.concat(person));
-            setNewNumber("");
-            setNewName("");
-        });
+        personService
+            .add(newPerson)
+            .then((person) => {
+                setPersons(persons.concat(person));
+                setNewNumber("");
+                setNewName("");
+            })
+            .finally(() => {
+                setNotificationStyle(correctStyle);
+                setNotificationMsg(`Item ${newPerson.name} inserted`);
+            });
     };
 
     const updatePerson = (id, newPerson) => {
         const dbPerson = persons.find((person) => person.id === id);
         const updatedPerson = { ...dbPerson, number: newPerson.number };
-        console.log(updatedPerson);
+
         personService
             .update(existingPerson.id, updatedPerson)
             .then((responsePerson) => {
@@ -74,6 +94,10 @@ function App() {
                         person.id !== id ? person : responsePerson
                     )
                 );
+            })
+            .finally(() => {
+                setNotificationStyle(correctStyle);
+                setNotificationMsg(`Item ${updatedPerson.name} updated`);
             });
     };
 
@@ -83,7 +107,15 @@ function App() {
             .then((res) =>
                 setPersons(persons.filter((person) => person.id !== id))
             )
-            .catch((err) => console.log("err", err));
+            .catch((err) => {
+                setNotificationStyle(errorStyle);
+                setNotificationMsg(`Item ${id} could not deleted`);
+            })
+            .finally(() => {
+                console.log(notificationStyle);
+                setNotificationStyle(correctStyle);
+                setNotificationMsg(`Item ${id} deleted`);
+            });
     };
 
     // useEffect(deletePersons, []);
@@ -91,7 +123,11 @@ function App() {
 
     return (
         <div>
-            <h2>PHONEBOOK</h2>
+            <h1>PHONEBOOK</h1>
+            <Notification
+                style={notificationStyle}
+                msg={notificationMsg}
+            ></Notification>
             <PersonForm
                 onSubmit={addNewPerson}
                 newNameHandler={handleNewName}

@@ -28,6 +28,7 @@ function App() {
 
     const getPersons = () => {
         personService.getAll().then((persons) => {
+            console.log('persons', persons)
             setPersons(persons);
         });
     };

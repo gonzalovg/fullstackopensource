@@ -4,9 +4,9 @@
   "description": "Full Stack Open Course Blog",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "jest --verbose"
   },
   "author": "Gonzalo Verdugo",
   "license": "ISC",
@@ -20,6 +20,10 @@
   "devDependencies": {
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.4"
+    "eslint-plugin-import": "^2.25.4",
+    "jest": "^27.5.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

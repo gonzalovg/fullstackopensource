@@ -28,7 +28,6 @@ function App() {
 
     const getPersons = () => {
         personService.getAll().then((persons) => {
-            console.log('persons', persons)
             setPersons(persons);
         });
     };
@@ -77,10 +76,15 @@ function App() {
                 setNewNumber("");
                 setNewName("");
             })
-            .finally(() => {
-                setNotificationStyle(correctStyle);
-                setNotificationMsg(`Item ${newPerson.name} inserted`);
+            .catch((error) => {
+                setNotificationStyle(errorStyle);
+
+                setNotificationMsg(error.response.data);
             });
+        // .finally(() => {
+        //     setNotificationStyle(correctStyle);
+        //     setNotificationMsg(`Item ${newPerson.name} inserted`);
+        // });
     };
 
     const updatePerson = (id, newPerson) => {
@@ -113,7 +117,6 @@ function App() {
                 setNotificationMsg(`Item ${id} could not deleted`);
             })
             .finally(() => {
-                console.log(notificationStyle);
                 setNotificationStyle(correctStyle);
                 setNotificationMsg(`Item ${id} deleted`);
             });
